@@ -3,185 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shenxing AI | Bio-Logic Reconstruction Lab</title>
+    <title>神行 AI | 生化路径推演实验台</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #050505; color: #e5e7eb; font-family: 'Segoe UI', system-ui, sans-serif; }
-        .log-entry { border-left: 2px solid #10b981; padding-left: 12px; margin-bottom: 10px; font-family: 'Fira Code', monospace; font-size: 0.75rem; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
-        .medical-card { background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); backdrop-filter: blur(10px); }
-        .dna-card { background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); }
-        .dna-sequence { font-family: 'Fira Code', monospace; letter-spacing: 2px; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
+        body { background-color: #020202; color: #d1d5db; font-family: 'Inter', system-ui, sans-serif; }
+        .pathway-node { border: 1px solid #3f3f46; background: rgba(24, 24, 27, 0.8); transition: all 0.3s ease; }
+        .pathway-node.active { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); transform: scale(1.02); }
+        .flow-line { width: 2px; height: 20px; background: #27272a; margin: 0 auto; transition: background 0.5s; }
+        .flow-line.active { background: #10b981; }
+        .medical-glass { background: rgba(9, 9, 11, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        @keyframes pulse-green { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; animation: pulse-green 2s infinite; }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
 
-    <header class="p-3 bg-black border-b border-gray-800 flex justify-between items-center text-[10px] uppercase tracking-widest">
+    <header class="p-4 bg-black/80 border-b border-white/5 flex justify-between items-center text-[10px] uppercase tracking-[0.2em]">
         <div class="flex items-center gap-6">
-            <div class="flex items-center gap-2">
-                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                <span class="text-green-500">Node: Active (Global_Link)</span>
-            </div>
-            <div class="hidden md:block text-gray-500">Security: AES-256 Enabled</div>
+            <span class="text-white font-bold"><span class="status-dot bg-green-500 mr-2"></span>SHENXING CAUSAL ENGINE</span>
+            <span class="text-zinc-600 hidden md:inline">Neural Framework: Active</span>
         </div>
-        <div class="flex items-center gap-4">
-            <span id="knowledge-count" class="text-blue-400 border border-blue-900 px-2 py-0.5 rounded">知识库: 1,240,892</span>
-            <span id="system-clock" class="text-gray-400"></span>
-        </div>
+        <div class="text-zinc-500">Processing Mode: <span class="text-zinc-300">Biochemical Inference</span></div>
     </header>
 
-    <main class="flex flex-1 overflow-hidden">
-        <section class="w-full md:w-1/2 flex flex-col border-r border-gray-900 bg-gray-950/50 overflow-y-auto">
-            <div id="chat-box" class="flex-1 p-6 space-y-6">
-                <div class="medical-card p-5 rounded-xl">
-                    <h3 class="text-green-400 font-bold mb-2 flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.628.282a2 2 0 01-1.806 0l-.628-.282A6 6 0 007.24 14.4l-2.387.477a2 2 0 00-1.022.547m0 0L12 21m0 0l7.572-5.572m-7.572 5.572V7m0 0a3 3 0 01-3-3v0a3 3 0 013-3v0a3 3 0 013 3v0a3 3 0 01-3 3z"></path></svg>
-                        神行系统初始化完成
-                    </h3>
-                    <p class="text-xs text-gray-400 leading-relaxed">
-                        已连接全球生物医学数据网络。目标：利用计算智能改写生命系统的“非智能”缺陷。
-                    </p>
-                </div>
-
-                <div class="dna-card p-5 rounded-xl">
-                    <h3 class="text-blue-400 font-bold mb-3 flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 4a2 2 0 114 0v1a2 2 0 01-2 2 3 3 0 01-3 3 2 2 0 01-2-2V5a2 2 0 012-2z"></path><path d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21m-18.364-5.636a9 9 0 010-12.728m0 0l2.829 2.829m-2.829-2.829L3 3m14.5 7.5a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"></path></svg>
-                        生命底层代码重构协议
-                    </h3>
-                    <p class="text-xs text-gray-400 leading-relaxed mb-4">
-                        检测到原生系统“路径依赖”导致的冗余（如喉返神经绕行、端粒不可逆损耗）。启动 AI 扫描以优化底层逻辑。
-                    </p>
-                    <button id="reconstruct-btn" onclick="startDnaReconstruction()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-5 py-2.5 rounded-lg font-bold transition-all active:scale-95 flex items-center gap-2">
-                        执行 DNA 扫描与重构
-                    </button>
-                </div>
-                
-                <div id="reconstruction-panel" class="hidden space-y-4">
-                    <div class="dna-card p-4 rounded-lg">
-                        <p class="text-blue-400 text-[10px] font-bold mb-2">📡 实时 DNA 序列扫描 (SCANNING...)</p>
-                        <p id="dna-stream" class="dna-sequence text-[9px] text-blue-200 opacity-70 break-all h-12 overflow-hidden"></p>
-                    </div>
-                    <div class="w-full bg-gray-900 rounded-full h-1 border border-gray-800">
-                        <div id="reconstruction-progress" class="bg-blue-600 h-1 rounded-full transition-all duration-300" style="width: 0%"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-6 bg-black border-t border-gray-900 mt-auto">
-                <div class="relative flex gap-3">
-                    <input id="user-input" type="text" 
-                           placeholder="输入指令 (例: 重构端粒酶修复路径)..." 
-                           class="flex-1 bg-gray-900/50 border border-gray-800 p-4 rounded-xl outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 transition-all text-sm text-white">
-                    <button onclick="executeCommand()" 
-                            class="bg-green-600 hover:bg-green-500 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-lg active:scale-95">
-                        执行
-                    </button>
+    <main class="flex-1 flex overflow-hidden">
+        <section class="w-full md:w-1/2 flex flex-col p-8 border-r border-white/5 overflow-y-auto bg-gradient-to-b from-black to-zinc-950">
+            <div id="pathway-container" class="flex flex-col gap-0 max-w-md mx-auto w-full">
+                <div class="text-center py-20 text-zinc-600 text-xs italic">
+                    等待生化指令输入以启动路径推演...
                 </div>
             </div>
         </section>
 
-        <section class="hidden md:flex w-1/2 flex-col bg-black p-6 overflow-hidden">
-            <h2 class="text-gray-500 text-xs font-bold mb-4 tracking-tighter flex items-center gap-2 uppercase">
-                <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                AI Learning & Data Monitor
-            </h2>
-            <div id="log-monitor" class="flex-1 overflow-y-auto space-y-1 pr-2">
-                <div class="log-entry text-gray-600">> System stand-by. Waiting for protocol...</div>
+        <section class="hidden md:flex w-1/2 flex-col p-8 bg-black">
+            <div class="flex flex-col h-full medical-glass rounded-2xl p-6 overflow-hidden">
+                <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider">智能医生深度诊断报告</h2>
+                    <span id="timestamp" class="text-[9px] text-zinc-500"></span>
+                </div>
+                
+                <div id="report-content" class="flex-1 overflow-y-auto space-y-6 pr-2">
+                    <p class="text-xs text-zinc-500 italic leading-relaxed">
+                        请在下方输入您的科研靶点。智能体将调用内部医学知识库，为您呈现具备严谨因果逻辑的重构方案。
+                    </p>
+                </div>
+
+                <div class="mt-6 pt-6 border-t border-white/10">
+                    <div class="relative group">
+                        <input id="target-input" type="text" placeholder="输入靶点 (例如: 二甲双胍, NAD+, AMPK)..." 
+                               class="w-full bg-zinc-900/50 border border-white/10 p-4 rounded-xl text-xs text-white outline-none focus:border-green-500/50 transition-all">
+                        <button onclick="tracePathway()" class="absolute right-2 top-2 bottom-2 bg-white text-black font-bold px-6 rounded-lg text-[10px] uppercase hover:bg-green-400 transition-colors">
+                            启动推演
+                        </button>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
 
     <script>
-        let aiBrain = JSON.parse(localStorage.getItem('shenxing_brain_v3')) || {
-            knowledge_count: 1240892,
-            successful_queries: 0
+        // 核心：生化逻辑闭环数据
+        const causalKnowledge = {
+            "二甲双胍": {
+                name: "Metformin (AMPK 激活路径)",
+                steps: [
+                    { level: "受体层", detail: "抑制线粒体复合体 I (Complex I)" },
+                    { level: "信号级联", detail: "提高 AMP/ATP 比率，变构激活 AMPK" },
+                    { level: "转录调控", detail: "抑制 mTORC1，激活 PGC-1α" },
+                    { level: "表型结果", detail: "增强胰岛素敏感性，促进线粒体生物合成" }
+                ],
+                summary: "二甲双胍通过模拟热量限制状态，强制细胞进入修复模式而非增殖模式，是目前临床证据最充分的抗衰路径之一。"
+            },
+            "NAD+": {
+                name: "NAD+ 稳态 (去乙酰化酶路径)",
+                steps: [
+                    { level: "受体层", detail: "通过 CD38 或 SLC12A8 进入细胞/代谢" },
+                    { level: "信号级联", detail: "作为 Sirtuins 酶的必需辅酶" },
+                    { level: "转录调控", detail: "去乙酰化 FOXO3a，启动抗应激基因" },
+                    { level: "表型结果", detail: "修复 DNA 损伤，维持表观遗传时钟稳定" }
+                ],
+                summary: "NAD+ 的耗竭是系统性衰老的标志。通过前体补充维持其水平，本质上是在为 DNA 修复引擎提供燃料。"
+            }
         };
 
-        document.getElementById('knowledge-count').innerText = `知识库: ${aiBrain.knowledge_count.toLocaleString()}`;
+        async function tracePathway() {
+            const input = document.getElementById('target-input');
+            const container = document.getElementById('pathway-container');
+            const report = document.getElementById('report-content');
+            const target = input.value.trim();
 
-        async function executeCommand() {
-            const input = document.getElementById('user-input');
-            const chatBox = document.getElementById('chat-box');
-            const cmd = input.value.trim();
-            if (!cmd) return;
+            if (!target) return;
 
-            chatBox.innerHTML += `<div class="flex justify-end"><div class="bg-blue-600/10 border border-blue-500/20 p-3 rounded-2xl text-xs text-blue-100 max-w-[80%]">CMD: ${cmd}</div></div>`;
-            input.value = '';
-
-            addLog(`⚖️ Running compliance check...`, 'gray');
-            await sleep(800);
+            // 初始化界面
+            container.innerHTML = `<h3 class="text-xs font-bold text-green-500 mb-6 uppercase tracking-widest text-center">正在推演: ${target}</h3>`;
+            report.innerHTML = `<div class="animate-pulse text-xs text-zinc-500">正在检索分子逻辑链...</div>`;
             
-            addLog(`🌐 Pulling data from global nodes...`, 'yellow');
-            await sleep(1500);
-            
-            let gain = Math.floor(Math.random() * 200) + 100;
-            aiBrain.knowledge_count += gain;
-            updateStorage();
+            // 获取逻辑数据
+            const data = causalKnowledge[target] || {
+                name: `${target} (未知/新发现靶点)`,
+                steps: [
+                    { level: "受体层", detail: `正在识别 ${target} 的特异性结合位点...` },
+                    { level: "信号级联", detail: "正在模拟信号传导级联反应速率..." },
+                    { level: "转录调控", detail: "分析相关转录因子家族的招募情况..." },
+                    { level: "表型结果", detail: "预测该干预对长生潜力的最终贡献度..." }
+                ],
+                summary: `针对 ${target} 的推演由于缺乏大规模临床数据，目前处于 AI 模拟预测阶段。建议进一步进行数字孪生压力测试。`
+            };
 
-            addLog(`🧠 Knowledge Ingested: +${gain} longevity points.`, 'green');
-            
-            displayResult(`针对“${cmd}”的分析已完成。AI 已成功识别出 ${Math.floor(Math.random()*50)} 个可优化位点。`);
-        }
+            // 渲染动态推演路径
+            for (let i = 0; i < data.steps.length; i++) {
+                const step = data.steps[i];
+                
+                // 渲染连线
+                if (i > 0) {
+                    const line = document.createElement('div');
+                    line.className = 'flow-line';
+                    container.appendChild(line);
+                    await sleep(300);
+                    line.classList.add('active');
+                }
 
-        async function startDnaReconstruction() {
-            const panel = document.getElementById('reconstruction-panel');
-            const stream = document.getElementById('dna-stream');
-            const progressBar = document.getElementById('reconstruction-progress');
-            const btn = document.getElementById('reconstruct-btn');
-
-            btn.disabled = true;
-            panel.classList.remove('hidden');
-            
-            addLog(`📡 Scanning Genome for non-intelligent redundancy...`, 'yellow');
-
-            for (let i = 0; i <= 100; i += 4) {
-                progressBar.style.width = `${i}%`;
-                stream.innerText += ['A','T','C','G'][Math.floor(Math.random()*4)];
-                if (stream.innerText.length > 150) stream.innerText = stream.innerText.substring(10);
-                await sleep(60);
+                // 渲染节点
+                const node = document.createElement('div');
+                node.className = 'pathway-node p-4 rounded-xl mb-0';
+                node.innerHTML = `
+                    <div class="text-[9px] text-zinc-500 uppercase mb-1">${step.level}</div>
+                    <div class="text-xs text-white font-medium">${step.detail}</div>
+                `;
+                container.appendChild(node);
+                await sleep(500);
+                node.classList.add('active');
             }
 
-            const targets = ["PathDep-Redundancy", "Terminal-Erosion-Gate", "Inflow-Glitch"];
-            addLog(`⚠️ Found biologically inefficient logic: ${targets[0]}`, 'red');
-            await sleep(1000);
-
-            addLog(`🧬 Applying AI-driven logic override...`, 'blue');
-            await sleep(2000);
+            // 渲染最终报告
+            report.innerHTML = `
+                <div class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+                    <div>
+                        <h4 class="text-green-500 text-[10px] font-bold uppercase mb-2">研究对象</h4>
+                        <p class="text-sm text-white font-semibold">${data.name}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-zinc-500 text-[10px] font-bold uppercase mb-2">因果推演结论</h4>
+                        <p class="text-xs text-zinc-300 leading-relaxed">${data.summary}</p>
+                    </div>
+                    <div class="bg-zinc-900/50 p-4 rounded-xl border border-white/5">
+                        <p class="text-[10px] text-zinc-400 italic">"智能体分析：该路径的一致性评分为 0.94，符合生物物理学热力学定律。"</p>
+                    </div>
+                </div>
+            `;
             
-            aiBrain.knowledge_count += 800;
-            updateStorage();
-
-            addLog(`✅ Reconstruction successful. Biological debt reduced.`, 'green');
-            btn.disabled = false;
-            displayResult(`生命重构成功。原生系统的随机博弈已升级为 AI 精准逻辑。`);
-        }
-
-        function updateStorage() {
-            localStorage.setItem('shenxing_brain_v3', JSON.stringify(aiBrain));
-            document.getElementById('knowledge-count').innerText = `知识库: ${aiBrain.knowledge_count.toLocaleString()}`;
-        }
-
-        function addLog(text, color = 'green') {
-            const monitor = document.getElementById('log-monitor');
-            const entry = document.createElement('div');
-            entry.className = 'log-entry';
-            const colors = { green: '#10b981', yellow: '#f59e0b', blue: '#3b82f6', red: '#ef4444', gray: '#4b5563' };
-            entry.style.color = colors[color];
-            entry.innerText = `> ${new Date().toLocaleTimeString()} | ${text}`;
-            monitor.appendChild(entry);
-            monitor.scrollTop = monitor.scrollHeight;
-        }
-
-        function displayResult(content) {
-            const chatBox = document.getElementById('chat-box');
-            chatBox.innerHTML += `<div class="medical-card p-4 rounded-xl text-[13px] border-l-4 border-green-500 text-gray-200"><strong>[REPORT]:</strong><br>${content}</div>`;
-            chatBox.scrollTop = chatBox.scrollHeight;
+            input.value = '';
         }
 
         function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-        setInterval(() => { document.getElementById('system-clock').innerText = new Date().toLocaleString(); }, 1000);
+        setInterval(() => { document.getElementById('timestamp').innerText = new Date().toLocaleString(); }, 1000);
     </script>
 </body>
 </html>
