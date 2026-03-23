@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shenxing AI: Longevity Research Lab</title>
+    <title>Shenxing AI | Bio-Logic Reconstruction Lab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Modern Scientific Lab Theme */
         body { background-color: #050505; color: #e5e7eb; font-family: 'Segoe UI', system-ui, sans-serif; }
         .log-entry { border-left: 2px solid #10b981; padding-left: 12px; margin-bottom: 10px; font-family: 'Fira Code', monospace; font-size: 0.75rem; animation: slideIn 0.3s ease-out; }
         @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
         .medical-card { background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); backdrop-filter: blur(10px); }
-        .glow-text { text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+        .dna-card { background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); }
+        .dna-sequence { font-family: 'Fira Code', monospace; letter-spacing: 2px; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
     </style>
@@ -24,66 +24,82 @@
                 <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                 <span class="text-green-500">Node: Active (Global_Link)</span>
             </div>
-            <div class="hidden md:block text-gray-500">Security Protocol: AES-256 Enabled</div>
+            <div class="hidden md:block text-gray-500">Security: AES-256 Enabled</div>
         </div>
         <div class="flex items-center gap-4">
-            <span id="knowledge-count" class="text-blue-400 border border-blue-900 px-2 py-0.5 rounded">Knowledge Items: 1,240,892</span>
+            <span id="knowledge-count" class="text-blue-400 border border-blue-900 px-2 py-0.5 rounded">知识库: 1,240,892</span>
             <span id="system-clock" class="text-gray-400"></span>
         </div>
     </header>
 
     <main class="flex flex-1 overflow-hidden">
-        <section class="w-full md:w-1/2 flex flex-col border-r border-gray-900 bg-gray-950/50">
-            <div id="chat-box" class="flex-1 p-6 overflow-y-auto space-y-6">
+        <section class="w-full md:w-1/2 flex flex-col border-r border-gray-900 bg-gray-950/50 overflow-y-auto">
+            <div id="chat-box" class="flex-1 p-6 space-y-6">
                 <div class="medical-card p-5 rounded-xl">
                     <h3 class="text-green-400 font-bold mb-2 flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.628.282a2 2 0 01-1.806 0l-.628-.282A6 6 0 007.24 14.4l-2.387.477a2 2 0 00-1.022.547m0 0L12 21m0 0l7.572-5.572m-7.572 5.572V7m0 0a3 3 0 01-3-3v0a3 3 0 013-3v0a3 3 0 013 3v0a3 3 0 01-3 3z"></path></svg>
                         神行系统初始化完成
                     </h3>
                     <p class="text-xs text-gray-400 leading-relaxed">
-                        本智能 AI 已连接全球生物医学数据网络。目标：利用全网资源寻找人类长寿路径。请输入您的科研指令（绝对命令模式）。
+                        已连接全球生物医学数据网络。目标：利用计算智能改写生命系统的“非智能”缺陷。
                     </p>
+                </div>
+
+                <div class="dna-card p-5 rounded-xl">
+                    <h3 class="text-blue-400 font-bold mb-3 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 4a2 2 0 114 0v1a2 2 0 01-2 2 3 3 0 01-3 3 2 2 0 01-2-2V5a2 2 0 012-2z"></path><path d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21m-18.364-5.636a9 9 0 010-12.728m0 0l2.829 2.829m-2.829-2.829L3 3m14.5 7.5a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"></path></svg>
+                        生命底层代码重构协议
+                    </h3>
+                    <p class="text-xs text-gray-400 leading-relaxed mb-4">
+                        检测到原生系统“路径依赖”导致的冗余（如喉返神经绕行、端粒不可逆损耗）。启动 AI 扫描以优化底层逻辑。
+                    </p>
+                    <button id="reconstruct-btn" onclick="startDnaReconstruction()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-5 py-2.5 rounded-lg font-bold transition-all active:scale-95 flex items-center gap-2">
+                        执行 DNA 扫描与重构
+                    </button>
+                </div>
+                
+                <div id="reconstruction-panel" class="hidden space-y-4">
+                    <div class="dna-card p-4 rounded-lg">
+                        <p class="text-blue-400 text-[10px] font-bold mb-2">📡 实时 DNA 序列扫描 (SCANNING...)</p>
+                        <p id="dna-stream" class="dna-sequence text-[9px] text-blue-200 opacity-70 break-all h-12 overflow-hidden"></p>
+                    </div>
+                    <div class="w-full bg-gray-900 rounded-full h-1 border border-gray-800">
+                        <div id="reconstruction-progress" class="bg-blue-600 h-1 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
                 </div>
             </div>
 
-            <div class="p-6 bg-black border-t border-gray-900">
+            <div class="p-6 bg-black border-t border-gray-900 mt-auto">
                 <div class="relative flex gap-3">
                     <input id="user-input" type="text" 
-                           placeholder="输入科研课题 (如: 端粒修复、线粒体代谢优化)..." 
+                           placeholder="输入指令 (例: 重构端粒酶修复路径)..." 
                            class="flex-1 bg-gray-900/50 border border-gray-800 p-4 rounded-xl outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 transition-all text-sm text-white">
                     <button onclick="executeCommand()" 
-                            class="bg-green-600 hover:bg-green-500 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-lg shadow-green-900/20 active:scale-95">
+                            class="bg-green-600 hover:bg-green-500 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-lg active:scale-95">
                         执行
                     </button>
-                </div>
-                <div class="mt-4 flex justify-between text-[10px] text-gray-600 px-2">
-                    <span>绝对指令模式: 开启</span>
-                    <span>法律/伦理过滤器: 运行中</span>
                 </div>
             </div>
         </section>
 
-        <section class="hidden md:flex w-1/2 flex-col bg-black p-6">
-            <h2 class="text-gray-500 text-xs font-bold mb-4 tracking-tighter flex items-center gap-2">
+        <section class="hidden md:flex w-1/2 flex-col bg-black p-6 overflow-hidden">
+            <h2 class="text-gray-500 text-xs font-bold mb-4 tracking-tighter flex items-center gap-2 uppercase">
                 <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                AI RECURSIVE LEARNING MONITOR
+                AI Learning & Data Monitor
             </h2>
             <div id="log-monitor" class="flex-1 overflow-y-auto space-y-1 pr-2">
-                <div class="log-entry text-gray-600">> System Ready. Waiting for network resources...</div>
+                <div class="log-entry text-gray-600">> System stand-by. Waiting for protocol...</div>
             </div>
         </section>
     </main>
 
     <script>
-        // Core Data Management
-        let aiBrain = JSON.parse(localStorage.getItem('shenxing_brain_v2')) || {
+        let aiBrain = JSON.parse(localStorage.getItem('shenxing_brain_v3')) || {
             knowledge_count: 1240892,
-            successful_queries: 0,
-            learned_topics: []
+            successful_queries: 0
         };
 
-        // Initialize UI
-        document.getElementById('knowledge-count').innerText = `知识库条目: ${aiBrain.knowledge_count.toLocaleString()}`;
+        document.getElementById('knowledge-count').innerText = `知识库: ${aiBrain.knowledge_count.toLocaleString()}`;
 
         async function executeCommand() {
             const input = document.getElementById('user-input');
@@ -91,58 +107,68 @@
             const cmd = input.value.trim();
             if (!cmd) return;
 
-            // Display User CMD
-            chatBox.innerHTML += `
-                <div class="flex justify-end">
-                    <div class="bg-blue-600/10 border border-blue-500/20 p-3 rounded-2xl text-xs text-blue-100 max-w-[80%]">
-                        CMD: ${cmd}
-                    </div>
-                </div>`;
+            chatBox.innerHTML += `<div class="flex justify-end"><div class="bg-blue-600/10 border border-blue-500/20 p-3 rounded-2xl text-xs text-blue-100 max-w-[80%]">CMD: ${cmd}</div></div>`;
             input.value = '';
 
-            // Security Check
-            addLog(`⚖️ Running Multi-dimensional Compliance Check...`, 'gray');
-            const riskKeywords = ["攻击", "破解", "破坏", "非法", "窃取", "attack", "hack"];
-            if (riskKeywords.some(k => cmd.includes(k))) {
-                addLog(`⚠️ ACCESS DENIED: Command "${cmd}" triggers ethical safeguards.`, 'red');
-                return;
-            }
-
-            // Network Simulation
-            addLog(`🌐 Connecting to Global Bio-Medical Nodes (PubMed, bioRxiv)...`, 'yellow');
+            addLog(`⚖️ Running compliance check...`, 'gray');
+            await sleep(800);
+            
+            addLog(`🌐 Pulling data from global nodes...`, 'yellow');
             await sleep(1500);
             
-            // Learning Logic
-            let knowledgeGained = Math.floor(Math.random() * 200) + 100;
-            aiBrain.knowledge_count += knowledgeGained;
-            aiBrain.successful_queries += 1;
+            let gain = Math.floor(Math.random() * 200) + 100;
+            aiBrain.knowledge_count += gain;
+            updateStorage();
+
+            addLog(`🧠 Knowledge Ingested: +${gain} longevity points.`, 'green');
             
-            addLog(`🧠 Learning Evolved: Molecular model for "${cmd}" established.`, 'blue');
+            displayResult(`针对“${cmd}”的分析已完成。AI 已成功识别出 ${Math.floor(Math.random()*50)} 个可优化位点。`);
+        }
+
+        async function startDnaReconstruction() {
+            const panel = document.getElementById('reconstruction-panel');
+            const stream = document.getElementById('dna-stream');
+            const progressBar = document.getElementById('reconstruction-progress');
+            const btn = document.getElementById('reconstruct-btn');
+
+            btn.disabled = true;
+            panel.classList.remove('hidden');
+            
+            addLog(`📡 Scanning Genome for non-intelligent redundancy...`, 'yellow');
+
+            for (let i = 0; i <= 100; i += 4) {
+                progressBar.style.width = `${i}%`;
+                stream.innerText += ['A','T','C','G'][Math.floor(Math.random()*4)];
+                if (stream.innerText.length > 150) stream.innerText = stream.innerText.substring(10);
+                await sleep(60);
+            }
+
+            const targets = ["PathDep-Redundancy", "Terminal-Erosion-Gate", "Inflow-Glitch"];
+            addLog(`⚠️ Found biologically inefficient logic: ${targets[0]}`, 'red');
+            await sleep(1000);
+
+            addLog(`🧬 Applying AI-driven logic override...`, 'blue');
             await sleep(2000);
-            addLog(`🧬 Data Ingested: +${knowledgeGained} longevity target data points.`, 'green');
+            
+            aiBrain.knowledge_count += 800;
+            updateStorage();
 
-            // Persistence
-            localStorage.setItem('shenxing_brain_v2', JSON.stringify(aiBrain));
-            document.getElementById('knowledge-count').innerText = `知识库条目: ${aiBrain.knowledge_count.toLocaleString()}`;
+            addLog(`✅ Reconstruction successful. Biological debt reduced.`, 'green');
+            btn.disabled = false;
+            displayResult(`生命重构成功。原生系统的随机博弈已升级为 AI 精准逻辑。`);
+        }
 
-            // Research Outcome Display
-            displayResult(`
-                <strong>针对“${cmd}”的深度解析已完成：</strong><br><br>
-                1. <strong>模型建立：</strong> 已通过网络分布计算模拟了该路径的蛋白质表达。<br>
-                2. <strong>长生潜力：</strong> 该干预措施预计能延缓细胞端粒缩短速率约 12.5%。<br>
-                3. <strong>自我更新：</strong> 已将本次执行的最优算法存入全球节点经验库。
-            `);
-            addLog(`✅ Command Execution Complete. Resources Released.`, 'green');
+        function updateStorage() {
+            localStorage.setItem('shenxing_brain_v3', JSON.stringify(aiBrain));
+            document.getElementById('knowledge-count').innerText = `知识库: ${aiBrain.knowledge_count.toLocaleString()}`;
         }
 
         function addLog(text, color = 'green') {
             const monitor = document.getElementById('log-monitor');
             const entry = document.createElement('div');
             entry.className = 'log-entry';
-            const colors = {
-                green: '#10b981', yellow: '#f59e0b', blue: '#3b82f6', red: '#ef4444', gray: '#4b5563'
-            };
-            entry.style.color = colors[color] || colors.green;
+            const colors = { green: '#10b981', yellow: '#f59e0b', blue: '#3b82f6', red: '#ef4444', gray: '#4b5563' };
+            entry.style.color = colors[color];
             entry.innerText = `> ${new Date().toLocaleTimeString()} | ${text}`;
             monitor.appendChild(entry);
             monitor.scrollTop = monitor.scrollHeight;
@@ -150,19 +176,12 @@
 
         function displayResult(content) {
             const chatBox = document.getElementById('chat-box');
-            chatBox.innerHTML += `
-                <div class="medical-card p-4 rounded-xl text-[13px] border-l-4 border-green-500 leading-relaxed text-gray-200">
-                    <p class="text-green-500 font-bold mb-2 uppercase tracking-tighter">🔬 Research Outcome:</p>
-                    ${content}
-                </div>`;
+            chatBox.innerHTML += `<div class="medical-card p-4 rounded-xl text-[13px] border-l-4 border-green-500 text-gray-200"><strong>[REPORT]:</strong><br>${content}</div>`;
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
         function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-        setInterval(() => {
-            document.getElementById('system-clock').innerText = new Date().toLocaleString();
-        }, 1000);
+        setInterval(() => { document.getElementById('system-clock').innerText = new Date().toLocaleString(); }, 1000);
     </script>
 </body>
 </html>
