@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>神行 AI | 生化路径推演实验台</title>
+    <title>Shenxing AI | Causal Inference Lab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #020202; color: #d1d5db; font-family: 'Inter', system-ui, sans-serif; }
@@ -30,7 +30,7 @@
         <section class="w-full md:w-1/2 flex flex-col p-8 border-r border-white/5 overflow-y-auto bg-gradient-to-b from-black to-zinc-950">
             <div id="pathway-container" class="flex flex-col gap-0 max-w-md mx-auto w-full">
                 <div class="text-center py-20 text-zinc-600 text-xs italic">
-                    等待生化指令输入以启动路径推演...
+                    Awaiting biochemical input to initiate pathway tracing...
                 </div>
             </div>
         </section>
@@ -38,22 +38,22 @@
         <section class="hidden md:flex w-1/2 flex-col p-8 bg-black">
             <div class="flex flex-col h-full medical-glass rounded-2xl p-6 overflow-hidden">
                 <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
-                    <h2 class="text-sm font-bold text-white uppercase tracking-wider">智能医生深度诊断报告</h2>
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider">AI Clinical Diagnostic Report</h2>
                     <span id="timestamp" class="text-[9px] text-zinc-500"></span>
                 </div>
                 
                 <div id="report-content" class="flex-1 overflow-y-auto space-y-6 pr-2">
                     <p class="text-xs text-zinc-500 italic leading-relaxed">
-                        请在下方输入您的科研靶点。智能体将调用内部医学知识库，为您呈现具备严谨因果逻辑的重构方案。
+                        Please enter a molecular target below. The agent will traverse the internal medical knowledge graph to provide a rigorous causal reconstruction.
                     </p>
                 </div>
 
                 <div class="mt-6 pt-6 border-t border-white/10">
                     <div class="relative group">
-                        <input id="target-input" type="text" placeholder="输入靶点 (例如: 二甲双胍, NAD+, AMPK)..." 
+                        <input id="target-input" type="text" placeholder="Enter Target (e.g., Metformin, NAD+, AMPK)..." 
                                class="w-full bg-zinc-900/50 border border-white/10 p-4 rounded-xl text-xs text-white outline-none focus:border-green-500/50 transition-all">
                         <button onclick="tracePathway()" class="absolute right-2 top-2 bottom-2 bg-white text-black font-bold px-6 rounded-lg text-[10px] uppercase hover:bg-green-400 transition-colors">
-                            启动推演
+                            Trace Path
                         </button>
                     </div>
                 </div>
@@ -62,27 +62,37 @@
     </main>
 
     <script>
-        // 核心：生化逻辑闭环数据
+        // Core: Biochemical Causal Data
         const causalKnowledge = {
-            "二甲双胍": {
-                name: "Metformin (AMPK 激活路径)",
+            "Metformin": {
+                name: "Metformin (AMPK Activation Pathway)",
                 steps: [
-                    { level: "受体层", detail: "抑制线粒体复合体 I (Complex I)" },
-                    { level: "信号级联", detail: "提高 AMP/ATP 比率，变构激活 AMPK" },
-                    { level: "转录调控", detail: "抑制 mTORC1，激活 PGC-1α" },
-                    { level: "表型结果", detail: "增强胰岛素敏感性，促进线粒体生物合成" }
+                    { level: "Receptor Level", detail: "Inhibition of Mitochondrial Complex I" },
+                    { level: "Signal Cascade", detail: "Increase in AMP/ATP ratio; Allosteric activation of AMPK" },
+                    { level: "Transcriptional Control", detail: "Downregulation of mTORC1; Activation of PGC-1α" },
+                    { level: "Phenotypic Outcome", detail: "Enhanced insulin sensitivity and mitochondrial biogenesis" }
                 ],
-                summary: "二甲双胍通过模拟热量限制状态，强制细胞进入修复模式而非增殖模式，是目前临床证据最充分的抗衰路径之一。"
+                summary: "Metformin operates by simulating a caloric restriction state, forcing cells into repair mode rather than proliferation. It remains one of the most clinically validated pathways for longevity intervention."
             },
             "NAD+": {
-                name: "NAD+ 稳态 (去乙酰化酶路径)",
+                name: "NAD+ Homeostasis (Sirtuin Pathway)",
                 steps: [
-                    { level: "受体层", detail: "通过 CD38 或 SLC12A8 进入细胞/代谢" },
-                    { level: "信号级联", detail: "作为 Sirtuins 酶的必需辅酶" },
-                    { level: "转录调控", detail: "去乙酰化 FOXO3a，启动抗应激基因" },
-                    { level: "表型结果", detail: "修复 DNA 损伤，维持表观遗传时钟稳定" }
+                    { level: "Receptor Level", detail: "Internalization via CD38 or SLC12A8 transporters" },
+                    { level: "Signal Cascade", detail: "Functioning as an essential co-substrate for Sirtuin enzymes" },
+                    { level: "Transcriptional Control", detail: "Deacetylation of FOXO3a; Initiation of anti-stress gene expression" },
+                    { level: "Phenotypic Outcome", detail: "DNA damage repair and maintenance of epigenetic clock stability" }
                 ],
-                summary: "NAD+ 的耗竭是系统性衰老的标志。通过前体补充维持其水平，本质上是在为 DNA 修复引擎提供燃料。"
+                summary: "The depletion of NAD+ is a hallmark of systemic aging. Maintaining its levels through precursor supplementation essentially provides fuel for the DNA repair engine."
+            },
+            "AMPK": {
+                name: "AMPK (Metabolic Master Switch)",
+                steps: [
+                    { level: "Receptor Level", detail: "Sensing of cellular energy charge (AMP/ATP ratio)" },
+                    { level: "Signal Cascade", detail: "Phosphorylation of TSC2 and RAPTOR complexes" },
+                    { level: "Transcriptional Control", detail: "Upregulation of autophagy-related genes (ULK1)" },
+                    { level: "Phenotypic Outcome", detail: "Systemic metabolic reprogramming and cellular waste clearance" }
+                ],
+                summary: "AMPK acts as the central metabolic controller. Its activation triggers a transition from energy-consuming biosynthetic processes to energy-conserving catabolic pathways."
             }
         };
 
@@ -94,27 +104,28 @@
 
             if (!target) return;
 
-            // 初始化界面
-            container.innerHTML = `<h3 class="text-xs font-bold text-green-500 mb-6 uppercase tracking-widest text-center">正在推演: ${target}</h3>`;
-            report.innerHTML = `<div class="animate-pulse text-xs text-zinc-500">正在检索分子逻辑链...</div>`;
+            // Initialize UI
+            container.innerHTML = `<h3 class="text-xs font-bold text-green-500 mb-6 uppercase tracking-widest text-center">Tracing: ${target}</h3>`;
+            report.innerHTML = `<div class="animate-pulse text-xs text-zinc-500">Traversing molecular logic chain...</div>`;
             
-            // 获取逻辑数据
-            const data = causalKnowledge[target] || {
-                name: `${target} (未知/新发现靶点)`,
+            // Retrieve Logic Data (Case-insensitive match or default fallback)
+            const matchedKey = Object.keys(causalKnowledge).find(k => k.toLowerCase() === target.toLowerCase());
+            const data = causalKnowledge[matchedKey] || {
+                name: `${target} (Atypical / Novel Target)`,
                 steps: [
-                    { level: "受体层", detail: `正在识别 ${target} 的特异性结合位点...` },
-                    { level: "信号级联", detail: "正在模拟信号传导级联反应速率..." },
-                    { level: "转录调控", detail: "分析相关转录因子家族的招募情况..." },
-                    { level: "表型结果", detail: "预测该干预对长生潜力的最终贡献度..." }
+                    { level: "Receptor Level", detail: `Identifying specific binding affinity for ${target}...` },
+                    { level: "Signal Cascade", detail: "Modeling signal transduction cascade kinetics..." },
+                    { level: "Transcriptional Control", detail: "Analyzing recruitment of transcription factor families..." },
+                    { level: "Phenotypic Outcome", detail: "Predicting final contribution to longevity potential..." }
                 ],
-                summary: `针对 ${target} 的推演由于缺乏大规模临床数据，目前处于 AI 模拟预测阶段。建议进一步进行数字孪生压力测试。`
+                summary: `Causal inference for ${target} is currently in AI-predictive mode due to limited longitudinal clinical data. Digital twin stress testing is recommended.`
             };
 
-            // 渲染动态推演路径
+            // Render Dynamic Pathway
             for (let i = 0; i < data.steps.length; i++) {
                 const step = data.steps[i];
                 
-                // 渲染连线
+                // Render Flow Line
                 if (i > 0) {
                     const line = document.createElement('div');
                     line.className = 'flow-line';
@@ -123,7 +134,7 @@
                     line.classList.add('active');
                 }
 
-                // 渲染节点
+                // Render Node
                 const node = document.createElement('div');
                 node.className = 'pathway-node p-4 rounded-xl mb-0';
                 node.innerHTML = `
@@ -135,19 +146,19 @@
                 node.classList.add('active');
             }
 
-            // 渲染最终报告
+            // Render Final Report
             report.innerHTML = `
                 <div class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
                     <div>
-                        <h4 class="text-green-500 text-[10px] font-bold uppercase mb-2">研究对象</h4>
+                        <h4 class="text-green-500 text-[10px] font-bold uppercase mb-2">Subject of Analysis</h4>
                         <p class="text-sm text-white font-semibold">${data.name}</p>
                     </div>
                     <div>
-                        <h4 class="text-zinc-500 text-[10px] font-bold uppercase mb-2">因果推演结论</h4>
+                        <h4 class="text-zinc-500 text-[10px] font-bold uppercase mb-2">Causal Inference Conclusion</h4>
                         <p class="text-xs text-zinc-300 leading-relaxed">${data.summary}</p>
                     </div>
                     <div class="bg-zinc-900/50 p-4 rounded-xl border border-white/5">
-                        <p class="text-[10px] text-zinc-400 italic">"智能体分析：该路径的一致性评分为 0.94，符合生物物理学热力学定律。"</p>
+                        <p class="text-[10px] text-zinc-400 italic">"Agent Note: Consistency score 0.94. Pathway aligns with established thermodynamic biological laws."</p>
                     </div>
                 </div>
             `;
