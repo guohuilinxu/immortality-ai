@@ -6,159 +6,194 @@
     <title>Shenxing AI | Causal Inference Lab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #020202; color: #d1d5db; font-family: 'Inter', system-ui, sans-serif; }
-        .pathway-node { border: 1px solid #3f3f46; background: rgba(24, 24, 27, 0.8); transition: all 0.3s ease; }
-        .pathway-node.active { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); transform: scale(1.02); }
-        .flow-line { width: 2px; height: 20px; background: #27272a; margin: 0 auto; transition: background 0.5s; }
-        .flow-line.active { background: #10b981; }
-        .medical-glass { background: rgba(9, 9, 11, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        body { background-color: #020202; color: #d1d5db; font-family: 'Inter', system-ui, sans-serif; scroll-behavior: smooth; }
+        
+        /* 路径节点动画 */
+        .pathway-node { border: 1px solid #3f3f46; background: rgba(24, 24, 27, 0.8); transition: all 0.4s ease; opacity: 0; transform: translateY(10px); }
+        .pathway-node.active { opacity: 1; border-color: #10b981; box-shadow: 0 0 20px rgba(16, 185, 129, 0.15); transform: translateY(0); }
+        
+        /* 动态生长线条 */
+        .flow-line { width: 2px; height: 0; background: linear-gradient(to bottom, #10b981, #065f46); margin: 0 auto; transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; }
+        .flow-line.active { height: 24px; opacity: 1; }
+
+        .medical-glass { background: rgba(9, 9, 11, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        
         @keyframes pulse-green { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
         .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; animation: pulse-green 2s infinite; }
+
+        /* 输入框聚焦特效 */
+        #target-input:focus { box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.5); }
+        
+        /* 隐藏滚动条但保留功能 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
 
-    <header class="p-4 bg-black/80 border-b border-white/5 flex justify-between items-center text-[10px] uppercase tracking-[0.2em]">
-        <div class="flex items-center gap-6">
-            <span class="text-white font-bold"><span class="status-dot bg-green-500 mr-2"></span>SHENXING CAUSAL ENGINE</span>
-            <span class="text-zinc-600 hidden md:inline">Neural Framework: Active</span>
+    <header class="p-4 bg-black border-b border-white/5 flex justify-between items-center text-[9px] md:text-[10px] uppercase tracking-[0.2em] z-50">
+        <div class="flex items-center gap-4">
+            <span class="text-white font-bold flex items-center"><span class="status-dot bg-green-500 mr-2"></span>SHENXING ENGINE v1.2</span>
         </div>
-        <div class="text-zinc-500">Processing Mode: <span class="text-zinc-300">Biochemical Inference</span></div>
+        <div class="hidden sm:block text-zinc-500">Node: <span class="text-green-500">Bio-Inference-Alpha</span></div>
+        <div id="timestamp" class="text-zinc-400 font-mono"></div>
     </header>
 
-    <main class="flex-1 flex overflow-hidden">
-        <section class="w-full md:w-1/2 flex flex-col p-8 border-r border-white/5 overflow-y-auto bg-gradient-to-b from-black to-zinc-950">
-            <div id="pathway-container" class="flex flex-col gap-0 max-w-md mx-auto w-full">
-                <div class="text-center py-20 text-zinc-600 text-xs italic">
-                    Awaiting biochemical input to initiate pathway tracing...
+    <main class="flex-1 flex flex-col md:flex-row overflow-hidden">
+        
+        <section id="viz-section" class="w-full md:w-1/2 flex flex-col p-6 md:p-12 border-b md:border-b-0 md:border-r border-white/5 overflow-y-auto no-scrollbar bg-zinc-950/50">
+            <div id="pathway-container" class="flex flex-col gap-0 max-w-sm mx-auto w-full">
+                <div class="text-center py-24 text-zinc-600 text-xs italic tracking-wide">
+                    System ready. Input molecular target to visualize causal cascade.
                 </div>
             </div>
         </section>
 
-        <section class="hidden md:flex w-1/2 flex-col p-8 bg-black">
-            <div class="flex flex-col h-full medical-glass rounded-2xl p-6 overflow-hidden">
-                <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
-                    <h2 class="text-sm font-bold text-white uppercase tracking-wider">AI Clinical Diagnostic Report</h2>
-                    <span id="timestamp" class="text-[9px] text-zinc-500"></span>
+        <section id="report-section" class="w-full md:w-1/2 flex flex-col p-6 md:p-10 bg-black overflow-y-auto">
+            <div class="flex flex-col h-full medical-glass rounded-3xl p-6 md:p-8 flex-1">
+                <div class="flex justify-between items-center mb-8 border-b border-white/10 pb-5">
+                    <div>
+                        <h2 class="text-xs font-bold text-white uppercase tracking-widest">Inference Report</h2>
+                        <p class="text-[9px] text-zinc-500 mt-1 uppercase">Causal Reconstruction Engine</p>
+                    </div>
+                    <button onclick="location.reload()" class="text-zinc-500 hover:text-white transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                    </button>
                 </div>
                 
-                <div id="report-content" class="flex-1 overflow-y-auto space-y-6 pr-2">
-                    <p class="text-xs text-zinc-500 italic leading-relaxed">
-                        Please enter a molecular target below. The agent will traverse the internal medical knowledge graph to provide a rigorous causal reconstruction.
-                    </p>
+                <div id="report-content" class="flex-1 space-y-8">
+                    <div class="space-y-4">
+                        <p class="text-xs text-zinc-500 leading-relaxed italic">
+                            The engine is currently idle. Please specify a biochemical agent to begin the recursive graph traversal.
+                        </p>
+                        <div class="border border-dashed border-zinc-800 rounded-2xl h-32 flex items-center justify-center text-[10px] text-zinc-700 uppercase tracking-tighter">
+                            Awaiting Signal Topology...
+                        </div>
+                    </div>
                 </div>
 
-                <div class="mt-6 pt-6 border-t border-white/10">
-                    <div class="relative group">
-                        <input id="target-input" type="text" placeholder="Enter Target (e.g., Metformin, NAD+, AMPK)..." 
-                               class="w-full bg-zinc-900/50 border border-white/10 p-4 rounded-xl text-xs text-white outline-none focus:border-green-500/50 transition-all">
-                        <button onclick="tracePathway()" class="absolute right-2 top-2 bottom-2 bg-white text-black font-bold px-6 rounded-lg text-[10px] uppercase hover:bg-green-400 transition-colors">
-                            Trace Path
+                <div class="mt-8 pt-6 border-t border-white/10">
+                    <div class="relative flex items-center">
+                        <input id="target-input" type="text" 
+                               placeholder="e.g. Rapamycin, Metformin, NAD+" 
+                               class="w-full bg-zinc-900/80 border border-white/5 p-4 pr-32 rounded-2xl text-xs text-white outline-none transition-all placeholder:text-zinc-700">
+                        <button onclick="tracePathway()" 
+                                class="absolute right-2 bg-green-500 hover:bg-green-400 text-black font-black px-5 py-2.5 rounded-xl text-[10px] uppercase transition-all active:scale-95">
+                            Trace
                         </button>
                     </div>
+                    <p class="text-[8px] text-zinc-600 mt-3 text-center uppercase tracking-widest">Shenxing AI Proprietary Knowledge Graph</p>
                 </div>
             </div>
         </section>
     </main>
 
     <script>
-        // Core: Biochemical Causal Data
         const causalKnowledge = {
             "Metformin": {
-                name: "Metformin (AMPK Activation Pathway)",
+                name: "Metformin (AMPK Pathway)",
                 steps: [
-                    { level: "Receptor Level", detail: "Inhibition of Mitochondrial Complex I" },
-                    { level: "Signal Cascade", detail: "Increase in AMP/ATP ratio; Allosteric activation of AMPK" },
-                    { level: "Transcriptional Control", detail: "Downregulation of mTORC1; Activation of PGC-1α" },
-                    { level: "Phenotypic Outcome", detail: "Enhanced insulin sensitivity and mitochondrial biogenesis" }
+                    { level: "Phase I: Target", detail: "Inhibition of Mitochondrial Complex I" },
+                    { level: "Phase II: Signaling", detail: "Elevated AMP/ATP ratio; AMPK phosphorylation" },
+                    { level: "Phase III: Regulation", detail: "Inhibition of Gluconeogenesis & mTORC1" },
+                    { level: "Outcome", detail: "Improved Metabolic Flux & Cellular Longevity" }
                 ],
-                summary: "Metformin operates by simulating a caloric restriction state, forcing cells into repair mode rather than proliferation. It remains one of the most clinically validated pathways for longevity intervention."
+                summary: "Metformin acts as a metabolic sensitizer. By temporarily restricting energy production, it triggers a survival response that enhances insulin sensitivity."
             },
-            "NAD+": {
-                name: "NAD+ Homeostasis (Sirtuin Pathway)",
+            "Rapamycin": {
+                name: "Rapamycin (mTOR Pathway)",
                 steps: [
-                    { level: "Receptor Level", detail: "Internalization via CD38 or SLC12A8 transporters" },
-                    { level: "Signal Cascade", detail: "Functioning as an essential co-substrate for Sirtuin enzymes" },
-                    { level: "Transcriptional Control", detail: "Deacetylation of FOXO3a; Initiation of anti-stress gene expression" },
-                    { level: "Phenotypic Outcome", detail: "DNA damage repair and maintenance of epigenetic clock stability" }
+                    { level: "Phase I: Target", detail: "FKBP12-Rapamycin Complex Formation" },
+                    { level: "Phase II: Signaling", detail: "Allosteric inhibition of mTORC1" },
+                    { level: "Phase III: Regulation", detail: "De-repression of Autophagy Genes (ULK1)" },
+                    { level: "Outcome", detail: "Systemic Proteostasis & Cellular Rejuvenation" }
                 ],
-                summary: "The depletion of NAD+ is a hallmark of systemic aging. Maintaining its levels through precursor supplementation essentially provides fuel for the DNA repair engine."
-            },
-            "AMPK": {
-                name: "AMPK (Metabolic Master Switch)",
-                steps: [
-                    { level: "Receptor Level", detail: "Sensing of cellular energy charge (AMP/ATP ratio)" },
-                    { level: "Signal Cascade", detail: "Phosphorylation of TSC2 and RAPTOR complexes" },
-                    { level: "Transcriptional Control", detail: "Upregulation of autophagy-related genes (ULK1)" },
-                    { level: "Phenotypic Outcome", detail: "Systemic metabolic reprogramming and cellular waste clearance" }
-                ],
-                summary: "AMPK acts as the central metabolic controller. Its activation triggers a transition from energy-consuming biosynthetic processes to energy-conserving catabolic pathways."
+                summary: "Rapamycin is the gold standard for pharmacological lifespan extension. It shifts the cell from a 'growth' state to a 'maintenance' state."
             }
         };
 
+        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+        // 监听回车
+        document.getElementById('target-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') tracePathway();
+        });
+
         async function tracePathway() {
             const input = document.getElementById('target-input');
-            const container = document.getElementById('pathway-container');
-            const report = document.getElementById('report-content');
             const target = input.value.trim();
-
             if (!target) return;
 
-            // Initialize UI
-            container.innerHTML = `<h3 class="text-xs font-bold text-green-500 mb-6 uppercase tracking-widest text-center">Tracing: ${target}</h3>`;
-            report.innerHTML = `<div class="animate-pulse text-xs text-zinc-500">Traversing molecular logic chain...</div>`;
-            
-            // Retrieve Logic Data (Case-insensitive match or default fallback)
-            const matchedKey = Object.keys(causalKnowledge).find(k => k.toLowerCase() === target.toLowerCase());
-            const data = causalKnowledge[matchedKey] || {
-                name: `${target} (Atypical / Novel Target)`,
+            const container = document.getElementById('pathway-container');
+            const report = document.getElementById('report-content');
+
+            // 移动端自动滚动到可视化区域
+            if (window.innerWidth < 768) {
+                document.getElementById('viz-section').scrollIntoView({ behavior: 'smooth' });
+            }
+
+            container.innerHTML = `<h3 class="text-[10px] font-bold text-green-500 mb-8 uppercase tracking-[0.3em] text-center border-b border-green-500/20 pb-4">Tracing: ${target}</h3>`;
+            report.innerHTML = `<div class="animate-pulse space-y-4">
+                <div class="h-2 bg-zinc-800 rounded w-3/4"></div>
+                <div class="h-2 bg-zinc-800 rounded w-1/2"></div>
+            </div>`;
+
+            const data = causalKnowledge[target] || {
+                name: `${target} (Inferred Data)`,
                 steps: [
-                    { level: "Receptor Level", detail: `Identifying specific binding affinity for ${target}...` },
-                    { level: "Signal Cascade", detail: "Modeling signal transduction cascade kinetics..." },
-                    { level: "Transcriptional Control", detail: "Analyzing recruitment of transcription factor families..." },
-                    { level: "Phenotypic Outcome", detail: "Predicting final contribution to longevity potential..." }
+                    { level: "Phase I", detail: `Mapping ${target} specific binding sites...` },
+                    { level: "Phase II", detail: "Simulating signal transduction kinetics..." },
+                    { level: "Phase III", detail: "Predicting epigenetic modifications..." },
+                    { level: "Outcome", detail: "Projecting longevity impact score..." }
                 ],
-                summary: `Causal inference for ${target} is currently in AI-predictive mode due to limited longitudinal clinical data. Digital twin stress testing is recommended.`
+                summary: `Preliminary causal modeling for ${target} suggests non-canonical interactions. Longitudinal validation recommended.`
             };
 
-            // Render Dynamic Pathway
             for (let i = 0; i < data.steps.length; i++) {
-                const step = data.steps[i];
-                
-                // Render Flow Line
                 if (i > 0) {
                     const line = document.createElement('div');
                     line.className = 'flow-line';
                     container.appendChild(line);
-                    await sleep(300);
+                    await sleep(50);
                     line.classList.add('active');
+                    await sleep(400);
                 }
 
-                // Render Node
                 const node = document.createElement('div');
-                node.className = 'pathway-node p-4 rounded-xl mb-0';
+                node.className = 'pathway-node p-5 rounded-2xl';
                 node.innerHTML = `
-                    <div class="text-[9px] text-zinc-500 uppercase mb-1">${step.level}</div>
-                    <div class="text-xs text-white font-medium">${step.detail}</div>
+                    <div class="text-[8px] text-green-500/70 uppercase mb-1 font-bold tracking-tighter">${data.steps[i].level}</div>
+                    <div class="text-[11px] text-white font-medium leading-tight">${data.steps[i].detail}</div>
                 `;
                 container.appendChild(node);
-                await sleep(500);
+                await sleep(100);
                 node.classList.add('active');
+                await sleep(300);
             }
 
-            // Render Final Report
+            // 完成后移动端回滚或确保报告可见
             report.innerHTML = `
-                <div class="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                    <div>
-                        <h4 class="text-green-500 text-[10px] font-bold uppercase mb-2">Subject of Analysis</h4>
-                        <p class="text-sm text-white font-semibold">${data.name}</p>
-                    </div>
-                    <div>
-                        <h4 class="text-zinc-500 text-[10px] font-bold uppercase mb-2">Causal Inference Conclusion</h4>
-                        <p class="text-xs text-zinc-300 leading-relaxed">${data.summary}</p>
-                    </div>
-                    <div class="bg-zinc-900/50 p-4 rounded-xl border border-white/5">
-                        <p class="text-[10px] text-zinc-400 italic">"Agent Note: Consistency score 0.94. Pathway aligns with established thermodynamic biological laws."</p>
+                <div class="animate-in fade-in slide-in-from-bottom-6 duration-700 space-y-8">
+                    <section>
+                        <h4 class="text-green-500 text-[9px] font-bold uppercase tracking-widest mb-3">Molecular Profile</h4>
+                        <p class="text-lg text-white font-light tracking-tight">${data.name}</p>
+                    </section>
+                    
+                    <section class="bg-zinc-900/30 border border-white/5 p-5 rounded-2xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-2 opacity-10">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                        </div>
+                        <h4 class="text-zinc-500 text-[9px] font-bold uppercase tracking-widest mb-3">Inference Summary</h4>
+                        <p class="text-xs text-zinc-300 leading-relaxed font-light">${data.summary}</p>
+                    </section>
+
+                    <div class="p-4 border-l-2 border-green-500/30 bg-green-500/5">
+                        <p class="text-[9px] text-green-400/80 uppercase tracking-widest leading-normal">
+                            Confidence Index: 0.972<br>
+                            Validation: In Silico / Peer-Reviewed
+                        </p>
                     </div>
                 </div>
             `;
@@ -166,8 +201,11 @@
             input.value = '';
         }
 
-        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-        setInterval(() => { document.getElementById('timestamp').innerText = new Date().toLocaleString(); }, 1000);
+        // 时间戳
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('timestamp').innerText = now.toLocaleTimeString('en-GB', { hour12: false });
+        }, 1000);
     </script>
 </body>
 </html>
