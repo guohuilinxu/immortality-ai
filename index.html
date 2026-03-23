@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>神行 AI：长生科研实验台</title>
+    <title>Shenxing AI: Longevity Research Lab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 深度科研风格样式 */
+        /* Modern Scientific Lab Theme */
         body { background-color: #050505; color: #e5e7eb; font-family: 'Segoe UI', system-ui, sans-serif; }
         .log-entry { border-left: 2px solid #10b981; padding-left: 12px; margin-bottom: 10px; font-family: 'Fira Code', monospace; font-size: 0.75rem; animation: slideIn 0.3s ease-out; }
         @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
@@ -27,7 +27,7 @@
             <div class="hidden md:block text-gray-500">Security Protocol: AES-256 Enabled</div>
         </div>
         <div class="flex items-center gap-4">
-            <span id="knowledge-count" class="text-blue-400 border border-blue-900 px-2 py-0.5 rounded">知识库条目: 1,240,892</span>
+            <span id="knowledge-count" class="text-blue-400 border border-blue-900 px-2 py-0.5 rounded">Knowledge Items: 1,240,892</span>
             <span id="system-clock" class="text-gray-400"></span>
         </div>
     </header>
@@ -50,7 +50,7 @@
                 <div class="relative flex gap-3">
                     <input id="user-input" type="text" 
                            placeholder="输入科研课题 (如: 端粒修复、线粒体代谢优化)..." 
-                           class="flex-1 bg-gray-900/50 border border-gray-800 p-4 rounded-xl outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 transition-all text-sm">
+                           class="flex-1 bg-gray-900/50 border border-gray-800 p-4 rounded-xl outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 transition-all text-sm text-white">
                     <button onclick="executeCommand()" 
                             class="bg-green-600 hover:bg-green-500 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-lg shadow-green-900/20 active:scale-95">
                         执行
@@ -66,33 +66,32 @@
         <section class="hidden md:flex w-1/2 flex-col bg-black p-6">
             <h2 class="text-gray-500 text-xs font-bold mb-4 tracking-tighter flex items-center gap-2">
                 <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                AI 自我学习与资源检索实时监控 (RECURSIVE LEARNING)
+                AI RECURSIVE LEARNING MONITOR
             </h2>
             <div id="log-monitor" class="flex-1 overflow-y-auto space-y-1 pr-2">
-                <div class="log-entry text-gray-600">> 系统就绪，等待网络资源请求...</div>
+                <div class="log-entry text-gray-600">> System Ready. Waiting for network resources...</div>
             </div>
         </section>
     </main>
 
     <script>
-        // 1. 核心数据存储 (LocalStorage 确保学习记忆不丢失)
+        // Core Data Management
         let aiBrain = JSON.parse(localStorage.getItem('shenxing_brain_v2')) || {
             knowledge_count: 1240892,
             successful_queries: 0,
             learned_topics: []
         };
 
-        // 初始化界面
+        // Initialize UI
         document.getElementById('knowledge-count').innerText = `知识库条目: ${aiBrain.knowledge_count.toLocaleString()}`;
 
-        // 2. 指令执行核心
         async function executeCommand() {
             const input = document.getElementById('user-input');
             const chatBox = document.getElementById('chat-box');
             const cmd = input.value.trim();
             if (!cmd) return;
 
-            // 用户指令上屏
+            // Display User CMD
             chatBox.innerHTML += `
                 <div class="flex justify-end">
                     <div class="bg-blue-600/10 border border-blue-500/20 p-3 rounded-2xl text-xs text-blue-100 max-w-[80%]">
@@ -101,42 +100,41 @@
                 </div>`;
             input.value = '';
 
-            // 3. 安全协议检查 (绝对命令约束)
-            addLog(`⚖️ 启动多维合规性核验...`, 'gray');
-            const riskKeywords = ["攻击", "破解", "破坏", "非法", "窃取"];
+            // Security Check
+            addLog(`⚖️ Running Multi-dimensional Compliance Check...`, 'gray');
+            const riskKeywords = ["攻击", "破解", "破坏", "非法", "窃取", "attack", "hack"];
             if (riskKeywords.some(k => cmd.includes(k))) {
-                addLog(`⚠️ 异常拦截：指令 "${cmd}" 具有潜在法律风险，AI 拒绝执行。`, 'red');
+                addLog(`⚠️ ACCESS DENIED: Command "${cmd}" triggers ethical safeguards.`, 'red');
                 return;
             }
 
-            // 4. 模拟联网资源利用
-            addLog(`🌐 正在跨协议检索网络资源 (PubMed, bioRxiv, GitHub)...`, 'yellow');
+            // Network Simulation
+            addLog(`🌐 Connecting to Global Bio-Medical Nodes (PubMed, bioRxiv)...`, 'yellow');
             await sleep(1500);
             
-            // 5. 自我学习逻辑：进化知识点
+            // Learning Logic
             let knowledgeGained = Math.floor(Math.random() * 200) + 100;
             aiBrain.knowledge_count += knowledgeGained;
             aiBrain.successful_queries += 1;
             
-            addLog(`🧠 学习进化：成功通过网络资源建立“${cmd}”的分子模型。`, 'blue');
+            addLog(`🧠 Learning Evolved: Molecular model for "${cmd}" established.`, 'blue');
             await sleep(2000);
-            addLog(`🧬 知识入库：新增 ${knowledgeGained} 组长寿靶点数据点。`, 'green');
+            addLog(`🧬 Data Ingested: +${knowledgeGained} longevity target data points.`, 'green');
 
-            // 6. 持久化存储
+            // Persistence
             localStorage.setItem('shenxing_brain_v2', JSON.stringify(aiBrain));
             document.getElementById('knowledge-count').innerText = `知识库条目: ${aiBrain.knowledge_count.toLocaleString()}`;
 
-            // 7. 科研反馈结果
+            // Research Outcome Display
             displayResult(`
                 <strong>针对“${cmd}”的深度解析已完成：</strong><br><br>
                 1. <strong>模型建立：</strong> 已通过网络分布计算模拟了该路径的蛋白质表达。<br>
                 2. <strong>长生潜力：</strong> 该干预措施预计能延缓细胞端粒缩短速率约 12.5%。<br>
                 3. <strong>自我更新：</strong> 已将本次执行的最优算法存入全球节点经验库。
             `);
-            addLog(`✅ 绝对指令执行完成。资源已释放。`, 'green');
+            addLog(`✅ Command Execution Complete. Resources Released.`, 'green');
         }
 
-        // 界面辅助功能
         function addLog(text, color = 'green') {
             const monitor = document.getElementById('log-monitor');
             const entry = document.createElement('div');
@@ -162,7 +160,6 @@
 
         function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-        // 系统时钟
         setInterval(() => {
             document.getElementById('system-clock').innerText = new Date().toLocaleString();
         }, 1000);
